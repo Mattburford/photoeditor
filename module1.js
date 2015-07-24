@@ -11,7 +11,7 @@ class ImageUtils {
         var c = ImageUtils.getCanvas(img.width, img.height);
         var ctx = c.getContext('2d');
         ctx.drawImage(img, 0, 0);
-        return ctx.getImageData(0,0,c.width,c.height);
+        return ctx.getImageData(0, 0, c.width, c.height);
     }
 
     static putPixels(imageData, w, h) {
@@ -28,12 +28,77 @@ function getRandomInt(min, max) {
 
 // function definitions here
 
-
-$(document).ready(function() {
+$(document).ready(function () {
     var img = new Image();
-    img.src = "img/cat.jpg";
-
-
-
+    img.src = "img/Golden.png";
+    makeFunky(img);
+    //makeNoise(img);
+    //makeInvert(img, 50);
+    //brighten(img, 100)
+    //makeMoreRed(img, 255);
+    //var pixels = ImageUtils.getPixels(img);
+    //var heightPixelsToHide= 10;
+    //for(var i = 0; i < img.width * heightPixelsToHide * 4; i++){
+    //  pixels.data[i] = 0;
+    //}
+    //ImageUtils. putPixels(pixels, img.width, img.height);
 
 });
+function makeMoreRed(img, adjustment) {
+    var pixels = ImageUtils.getPixels(img);
+    var length = pixels.data.length;
+    var data = pixels.data;
+    for (var i = 0; i < length; i += 4) {
+        data[i + 2] = data[i + 2] + adjustment;
+    }
+    ImageUtils.putPixels(pixels, img.width, img.height);
+}
+function brighten(img, adjustment) {
+    var pixels = ImageUtils.getPixels(img);
+    var length = pixels.data.length;
+    var data = pixels.data;
+    for (var i = 0; i < length; i += 4) {
+        data[i] = data [i] + adjustment;
+        data[i + 1] = data[i + 1] + adjustment;
+        data[i + 2] = data[i + 2] + adjustment;
+    }
+    //???
+
+    ImageUtils.putPixels(pixels, img.width, img.height);
+}
+function makeInvert(img) {
+    var pixels = ImageUtils.getPixels(img);
+    var length = pixels.data.length;
+    var data = pixels.data;
+    for (var i = 0; i < length; i += 4) {
+        data[i] = 255 - data [i];
+        data[i + 1] = 255 - data[i + 1];
+        data[i + 2] = 255 - data[i + 2];
+    }
+    //?????
+    ImageUtils.putPixels(pixels, img.width, img.height);
+}
+function makeNoise(img) {
+    var pixels = ImageUtils.getPixels(img);
+    var length = pixels.data.length;
+    var data = pixels.data;
+    for (var i = 0; i < length; i += 4) {
+        data[i] = data [i] + getRandomInt(-50, 50);
+        data[i + 1] = data[i + 1] + getRandomInt(-50, 50);
+        data[i + 2] = data[i + 2] + getRandomInt(-50, 50);
+    }
+    //?????
+    ImageUtils.putPixels(pixels, img.width, img.height);
+
+}
+function makeFunky(img) {
+    var pixels = ImageUtils.getPixels(img);
+    var length = pixels.data.length;
+    var data = pixels.data;
+    for (var i = 0; i < length / 2; i += 2) {
+        var temp = data[i];
+        data[i] = data[length - i];
+        data[length - i] = temp;
+    }
+    ImageUtils.putPixels(pixels, img.width, img.height);
+}
